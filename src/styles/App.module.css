@@ -12,9 +12,10 @@
   justify-content: flex-start;
   padding: 0.5rem calc(50% - var(--column-width) * 1.5 - var(--column-gap) * 2);
   background: white;
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 2000;
+  padding-bottom: 2px;
 }
 
 .createButton {
@@ -61,4 +62,34 @@
 
 .createButton:focus {
   outline: none;
+}
+
+@media (max-width: 768px) {
+  .appContainer {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .appContainer::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.scrollIndicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.scrollProgress {
+  height: 100%;
+  background: #007bff;
+  transition: width 0.1s ease-out;
 }
