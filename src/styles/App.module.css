@@ -1,0 +1,64 @@
+.appContainer {
+  display: flex;
+  flex-direction: column;
+  font-family: 'TinkoffSans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.header {
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.5rem calc(50% - var(--column-width) * 1.5 - var(--column-gap) * 2);
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+}
+
+.createButton {
+  height: var(--task-button-height); /* кнопка имеет ту же высоту, что и в задачах */
+  padding: var(--main-button-padding);
+  border: none;
+  border-radius: calc(var(--border-radius-card) / 2);
+  background: var(--color-border);
+  color: white;
+  font-size: var(--font-size-task-description);
+  font-family: 'TinkoffSans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1;
+  cursor: pointer;
+  transition: all var(--button-hover-duration) ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--header-button-icon-gap);
+  outline: none !important;
+}
+
+.createButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--color-text-primary);
+  transition: left var(--button-hover-duration) ease;
+  z-index: -1;
+}
+
+.createButton:hover::before {
+  left: 0;
+}
+
+.createButton:hover {
+  color: white;
+}
+
+.createButton:focus {
+  outline: none;
+}

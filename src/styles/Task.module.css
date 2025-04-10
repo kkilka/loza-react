@@ -1,0 +1,959 @@
+.taskCard {
+  padding: calc(var(--task-padding) - var(--border-width));
+  margin: var(--task-margin) 0;
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius-card);
+  --shadow-color: color-mix(in srgb, var(--color-border) 60%, transparent 40%);
+  box-shadow: 0 0 25px var(--shadow-color);
+  cursor: grab;
+  position: relative;
+  transition: opacity var(--animation-duration) var(--animation-timing), transform var(--animation-duration) var(--animation-timing);
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dragging {
+  opacity: 0;
+  cursor: grabbing;
+}
+
+.removing,
+.deletionPlaceholder {
+  pointer-events: none;
+  border: none;
+  background: var(--color-delete-bg);
+  --color-border: var(--color-delete); /* Override border color for marker */
+  --shadow-color: color-mix(in srgb, var(--color-delete) 60%, transparent 40%); /* Override shadow color */
+}
+
+.removing {
+  animation: removeTask var(--animation-duration-delete) ease-in-out forwards;
+}
+
+.deletionPlaceholder {
+  animation: fadeIn 0.2s ease forwards;
+  visibility: visible;
+}
+
+.exitingPlaceholder {
+  border: 1px dashed #d00;
+  background: #fff0f0;
+  animation: hidePlaceholder 0.2s ease forwards;
+}
+
+.deleting {
+  animation: removeTask var(--task-remove-duration) cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  pointer-events: none;
+}
+
+.appearing {
+  animation: removeTask var(--task-remove-duration) cubic-bezier(0.25, 1, 0.5, 1) reverse forwards;
+  will-change: transform, opacity, max-height, margin, padding, border-width;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+    visibility: visible;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    visibility: visible;
+  }
+}
+
+@keyframes hidePlaceholder {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes showDeletionPlaceholder {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+}
+
+@keyframes hideDeletionPlaceholder {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes removeTask {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    margin: var(--task-margin) 0;
+    padding: calc(var(--task-padding) - var(--border-width));
+    max-height: 500px; /* Увеличиваем для учета всего контента */
+    border-width: var(--border-width);
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+    margin: 0;
+    padding: 0;
+    max-height: 0;
+    border-width: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes appearTask {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+    margin: 0;
+    padding: 0;
+    max-height: 0;
+    border-width: 0;
+    visibility: hidden;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    margin: var(--task-margin) 0;
+    padding: calc(var(--task-padding) - var(--border-width));
+    max-height: 500px; /* Увеличиваем для учета всего контента */
+    border-width: var(--border-width);
+    visibility: visible;
+  }
+}
+
+/* Optionally, remove unused keyframes */
+/*
+@keyframes deleteTask {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    max-height: 500px;
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-10px) scale(0.97);
+    max-height: 250px;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    max-height: 0;
+    margin: 0;
+    padding: 0;
+  }
+}
+*/
+
+/* New cancel removal style and animation */
+.cancelingRemoval {
+  animation: cancelRemoval 0.2s ease-out forwards;
+}
+
+@keyframes cancelRemoval {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+    border: var(--border-width) dashed var(--color-delete);
+    background: var(--color-delete-bg);
+    visibility: visible;
+  }
+  99% {
+    opacity: 0;
+    transform: scale(0.95);
+    visibility: visible;
+  }
+  100% {
+    visibility: hidden;
+  }
+}
+
+.taskTitle {
+  margin: 0 0 var(--task-title-margin) 0;
+  font-size: var(--font-size-task-title);
+  color: var(--color-text-primary);
+  text-align: left;
+  font-weight: bold;
+  line-height: var(--line-height-title);
+  cursor: pointer;
+}
+
+.taskDescription {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-task-description);
+  line-height: var(--line-height-description);
+  cursor: pointer;
+}
+
+.taskTitle,
+.taskDescription {
+  outline: none;
+}
+
+.taskTitle:focus,
+.taskDescription:focus {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+}
+
+.taskTitle[contenteditable],
+.taskDescription[contenteditable] {
+  outline: none;
+  cursor: text;
+}
+
+.taskTitle[contenteditable]:focus,
+.taskDescription[contenteditable]:focus {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+}
+
+.overlayTask {
+  z-index: 1;
+  pointer-events: none;
+  opacity: 1;
+  background: white;
+}
+
+.taskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+  margin-bottom: var(--task-title-margin);
+}
+
+.moveButton {
+  display: none; /* Remove old move buttons */
+}
+
+.menuButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: color 0.2s ease;
+  outline: none !important;
+}
+
+.menuButton:hover {
+  color: var(--color-text-primary);
+}
+
+.menuButton:focus, .menuButton:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.menuDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.menuDropdown button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: var(--color-text-primary);
+}
+
+.menuDropdown button:hover {
+  background-color: #f5f5f5;
+}
+
+.menuDropdown .deleteButton {
+  color: var(--color-delete);
+}
+
+.menuDropdown .deleteButton:hover {
+  background-color: var(--color-delete-bg);
+}
+
+/* Remove old move button styles */
+.moveLeft, .moveRight {
+  display: none;
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.editInput,
+.editTextarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 2px solid var(--color-border);
+  border-radius: calc(var(--border-radius-card) / 2);
+  font-family: inherit;
+  resize: vertical;
+  background: var(--color-surface);
+}
+
+.editInput {
+  font-size: var(--font-size-task-title);
+  font-weight: bold;
+}
+
+.editTextarea {
+  font-size: var(--font-size-task-description);
+  min-height: 4rem;
+}
+
+.editButtons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.saveButton,
+.cancelButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: calc(var(--border-radius-card) / 2);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.saveButton {
+  background: var(--color-border);
+  color: white;
+}
+
+.saveButton:hover {
+  background: var(--color-text-primary);
+}
+
+.cancelButton {
+  background: #eee;
+  color: var(--color-text-secondary);
+}
+
+.cancelButton:hover {
+  background: #ddd;
+}
+
+.menuContainer {
+  position: absolute;
+  top: var(--move-button-margin);
+  right: var(--move-button-margin);
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.2s ease;
+  z-index: 1001;
+}
+
+.taskCard:hover .menuContainer {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.menuButton {
+  width: var(--move-button-size);
+  height: var(--move-button-size);
+  background: var(--move-button-background);
+  border: 2px solid var(--move-button-color);
+  border-radius: var(--move-button-border-radius);
+  color: var(--move-button-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--move-button-size) * 0.4);
+  padding: 0;
+  transition: all 0.2s ease;
+  outline: none !important;
+}
+
+.menuButton:hover {
+  color: var(--move-button-hover-color);
+  background: var(--move-button-hover-background);
+  border-color: var(--move-button-hover-color);
+}
+
+.menuButton:focus, .menuButton:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.menuDropdown {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow: hidden;
+  min-width: 120px;
+}
+
+.menuDropdown button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: var(--font-size-task-description);
+  line-height: var(--line-height-description);
+}
+
+.taskTitleContainer {
+  display: flex;
+  align-items: center;
+}
+
+.taskLeftMarker {
+  width: 6px; /* Thickness of the protrusion */
+  height: 100%; /* Matches the height of the title */
+  background-color: var(--color-border, #007acc); /* Accent color */
+  margin-right: 8px; /* Space between the marker and the title */
+}
+
+.taskTitle {
+  margin: 0;
+  font-size: var(--font-size-task-title);
+  font-weight: bold;
+  color: var(--color-text-primary);
+}
+
+.taskContent {
+  position: relative;
+  display: flex;
+}
+
+.taskLeftMarker {
+  position: absolute;
+  left: calc(-1 * (var(--task-padding) - var(--border-width)));
+  top: 0;
+  width: var(--task-marker-width);
+  background-color: var(--color-border);
+  pointer-events: none;
+  border-top-right-radius: var(--task-marker-border-radius);
+  border-bottom-right-radius: var(--task-marker-border-radius);
+  height: auto;
+  bottom: calc(100% - var(--task-title-margin) - 1.1em); /* 1.1em примерно равно высоте строки */
+}
+
+.taskTextContent {
+  flex: 1;
+  position: relative; /* added so that absolutely positioned children are relative */
+}
+
+.taskTextContent.editing .taskTitle:not(:focus),
+.taskTextContent.editing .taskDescription:not(:focus),
+.taskTextContent.editing .timeEstimate:not(:focus),
+.taskTextContent.editing .deadline:not(:focus),
+.taskTextContent.editing .difficultyBarsContainer {
+  opacity: 0.3;
+  transition: opacity var(--status-switch-duration) ease;
+}
+
+.taskTitle:not(:focus),
+.taskDescription:not(:focus),
+.timeEstimate:not(:focus),
+.deadline:not(:focus),
+.difficultyBarsContainer {
+  transition: opacity var(--status-switch-duration) ease;
+}
+
+.taskTextContent.editing .taskTitle:not(:focus),
+.taskTextContent.editing .taskDescription:not(:focus),
+.taskTextContent.editing .timeEstimate:not(:focus),
+.taskTextContent.editing .deadline:not(:focus),
+.taskTextContent.editing .difficultyBarsContainer {
+  opacity: 0.3;
+  transition: opacity var(--status-switch-duration) ease;
+}
+
+.taskTitle {
+  margin: 0 0 var(--task-title-margin) 0;
+  /* ...other existing taskTitle styles... */
+}
+
+.taskDescription {
+  margin: 0;
+  /* ...other existing taskDescription styles... */
+}
+
+.difficultyIndicator {
+  margin-top: var(--task-title-margin);
+}
+
+.difficultyBarsContainer {
+  display: flex;
+  gap: var(--difficulty-bar-gap);
+  width: 100%;
+}
+
+.difficultyBar {
+  flex: 1;
+  height: var(--difficulty-bar-height);
+  border-radius: calc(var(--difficulty-bar-height) / 2);
+}
+
+.filled {
+  opacity: 1;
+}
+
+.empty {
+  opacity: var(--difficulty-empty-opacity);
+}
+
+.difficultyBarEasy {
+  background-color: var(--color-difficulty-easy); /* зеленый */
+}
+
+.difficultyBarMedium {
+  background-color: var(--color-difficulty-medium); /* желтый */
+}
+
+.difficultyBarHard {
+  background-color: var(--color-delete); /* красный */
+}
+
+.difficultyContainer {
+  margin-top: var(--task-title-margin);
+}
+
+.timingInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2px; /* Changed from 4px to 2px */
+  font-size: var(--font-size-task-description);
+  color: var(--color-text-primary);
+  gap: 12px;
+  align-items: center;
+}
+
+.timeEstimate, .deadline {
+  opacity: 0.7;
+}
+
+.timeEstimate[contenteditable] {
+  outline: none;
+  cursor: text;
+}
+
+.timeEstimate[contenteditable]:focus {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  padding: 0 4px;
+  margin: 0 -4px;
+}
+
+/* MUI DatePicker styles */
+.deadline {
+  opacity: 0.7;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.deadline:hover {
+  opacity: 1;
+}
+
+/* Calendar popup customization */
+:global(.MuiPickersPopper-root) {
+  font-family: inherit !important;
+}
+
+:global(.MuiPickersDay-root) {
+  font-family: inherit !important;
+  font-size: 1rem !important;
+}
+
+:global(.MuiDayCalendar-header) {
+  font-family: inherit !important;
+}
+
+:global(.MuiPickersCalendarHeader-label) {
+  font-family: inherit !important;
+  font-size: 1.1rem !important;
+  font-weight: 500;
+}
+
+:global(.MuiPickersArrowSwitcher-button) {
+  color: var(--color-border) !important;
+}
+
+:global(.MuiPickersYear-yearButton),
+:global(.MuiPickersMonth-monthButton) {
+  font-family: inherit !important;
+  font-size: 1rem !important;
+}
+
+:global(.MuiPickersDay-today) {
+  color: var(--color-border) !important;
+}
+
+:global(.MuiPickersYear-yearButton.Mui-selected),
+:global(.MuiPickersMonth-monthButton.Mui-selected) {
+  background-color: #50C878 !important;
+  color: white !important;
+}
+
+:global(.MuiPickersYear-yearButton:hover),
+:global(.MuiPickersMonth-monthButton:hover) {
+  background-color: #d4f7d4 !important;
+}
+
+/* Style for the date text */
+.timingInfo :global(.MuiInputBase-root) {
+  font-family: inherit;
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.timingInfo :global(.MuiInputBase-input) {
+  padding: 0;
+  cursor: pointer;
+}
+
+.timingInfo :global(.MuiInputBase-input::placeholder) {
+  opacity: 0.7;
+}
+
+/* Calendar popup customization */
+:global(.MuiPaper-root.MuiPickersPopper-paper) {
+  font-family: inherit;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+:global(.MuiPickersDay-root) {
+  color: var(--color-text);
+}
+
+:global(.MuiPickersDay-root:hover) {
+  background-color: var(--color-hover) !important;
+}
+
+:global(.MuiPickersDay-root.Mui-selected) {
+  background-color: var(--color-accent) !important;
+  color: white;
+}
+
+.taskActions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--task-button-height);
+  background: transparent;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity var(--status-switch-duration) ease;
+}
+
+.taskCard:hover .taskActions {
+  opacity: 1;
+}
+
+.taskActionsHidden {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  margin-top: 0 !important;
+  max-height: 0 !important;
+}
+
+.taskButton {
+  width: 100%;
+  padding: 8px;
+  background: var(--color-border);
+  color: white;
+  border: none;
+  border-radius: calc(var(--border-radius-card) / 2);
+  cursor: pointer;
+  font-size: var(--font-size-task-description);
+  transition: background 0.2s ease;
+}
+
+.taskButton:hover {
+  background: var(--color-text-primary);
+}
+
+/* Add global dragging state class */
+:global(.dragging) .taskCard:hover .taskActions {
+  max-height: 0;
+  margin-top: 0;
+  opacity: 0;
+}
+
+.taskButtonsRow {
+  display: flex;
+  gap: var(--task-button-gap);
+  width: 100%;
+  height: 0;
+  min-height: 0;
+  transition: height var(--status-switch-duration) ease, min-height var(--status-switch-duration) ease;
+  overflow: hidden;
+  position: relative;
+  border-radius: calc(var(--border-radius-card) / 2);
+}
+
+.taskCard:hover .taskButtonsRow {
+  height: var(--task-button-height);
+  min-height: var(--task-button-height);
+}
+
+.iconButton {
+  width: var(--task-button-height); /* use height as width for square buttons */
+  height: var(--task-button-height);
+  padding: 0;
+  border: none;
+  border-radius: calc(var(--border-radius-card) / 2);
+  background: var(--color-border);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--button-hover-duration) ease;
+  outline: none !important;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.iconButton:hover {
+  color: white !important;
+  background: var(--color-text-primary) !important;
+  svg {
+    color: white;
+  }
+}
+
+.iconButton:focus, .iconButton:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.iconButton[title="Удалить"] {
+  z-index: 3; /* кнопка удаления поверх всего */
+  position: relative;
+}
+
+.mainButton {
+  flex: 1;
+  height: var(--task-button-height);
+  padding: 0 16px;
+  border: none;
+  border-radius: calc(var(--border-radius-card) / 2);
+  background: var(--color-border);
+  color: white;
+  font-size: var(--font-size-task-description);
+  cursor: pointer;
+  transition: color var(--button-hover-duration) ease; /* Only transition color, not all properties */
+  outline: none !important;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.mainButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--color-text-primary);
+  transition: left var(--button-hover-duration) ease;
+  z-index: -1;
+}
+
+.mainButton:hover::before {
+  left: 0;
+}
+
+.mainButton:hover {
+  color: white !important;
+  svg {
+    color: white;
+  }
+}
+
+.mainButton:focus, .mainButton:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.mainButton.rightToLeft::before {
+  left: 100%;
+  transition: left var(--button-hover-duration) ease;
+}
+
+.mainButton.rightToLeft:hover::before {
+  left: 0;
+}
+
+.taskStatusContainer {
+  height: var(--task-button-height);
+  margin-top: calc(var(--task-title-margin) * 1.5);
+}
+
+.taskStatus {
+  height: var(--task-button-height);
+  padding: 0 16px;
+  background: linear-gradient(to right, 
+    #d4f7d4 var(--progress),
+    var(--color-surface) var(--progress),
+    var(--color-surface) 100%
+  );
+  background-size: 100% 100%;
+  color: var(--color-border);
+  border: var(--border-width) solid #d4f7d4;
+  border-radius: calc(var(--border-radius-card) / 2);
+  font-size: var(--font-size-task-description);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  transition: opacity var(--status-switch-duration) ease;
+  overflow: hidden;
+}
+
+.taskCard:hover .taskStatus {
+  opacity: 0;
+}
+
+/* Style for overlay filling on delete button */
+.deleteProgress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background-color: var(--color-delete-progress);
+  transition: width 0.05s linear;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+  border-radius: calc(var(--border-radius-card) / 2);
+}
+
+.deleteProgressText {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: max-content;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  color: white;
+  font-size: var(--font-size-task-description);
+  transform: translateX(var(--task-button-height));
+}
+
+/* Стили для блока подсказки */
+.deleteHint {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 0 8px 0 calc(var(--task-button-height) + 8px); /* Добавляем отступ слева равный ширине кнопки + 8px */
+  font-size: var(--font-size-task-description); /* увеличиваем размер шрифта */
+  display: flex;
+  align-items: center;
+  border-radius: calc(var(--border-radius-card) / 2);
+  animation: slideHint var(--delete-hint-slide-duration) ease-out forwards;
+  z-index: 2; /* под прогрессом удаления */
+  white-space: nowrap; /* Предотвращаем перенос текста */
+}
+
+@keyframes slideHint {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Добавляем анимацию для плавного скрытия подсказки */
+@keyframes fadeOutHint {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+/* Применяем анимацию при выключении подсказки */
+.deleteHint.exit {
+  animation: fadeOutHint var(--delete-hint-slide-duration) ease-out forwards;
+}
+
+.datePickerWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.deadline {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.deadline:hover {
+  color: var(--color-primary);
+}

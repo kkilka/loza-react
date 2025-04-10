@@ -1,0 +1,33 @@
+@font-face {
+  font-family: 'TinkoffSans';
+  src: url('../fonts/TinkoffSans.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TinkoffSans';
+  src: url('../fonts/TinkoffSans_Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+
+@font-face {
+  font-family: 'Cursive';
+  src: url('../fonts/ClassRoomCursive.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NotCursive';
+  src: url('../fonts/Gosznak-Semi Bold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

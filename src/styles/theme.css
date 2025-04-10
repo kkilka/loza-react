@@ -1,0 +1,76 @@
+:root {
+  /* Layout & Sizing */
+  --column-width: 25rem;
+  --column-gap: 1.5rem;
+  --column-margin-top: 16px;
+  --task-padding: 1.5rem;
+  --task-margin: 0.5rem;
+  --column-title-margin: 1.5rem;
+  --board-padding: 1rem;
+  --border-radius-card: 30px;
+  --task-title-margin: 0.75rem;
+
+  /* Colors */
+  --color-background: #f4f5f7;
+  --color-surface: white;
+  --color-text-primary: rgb(0, 25, 0);
+  --color-text-secondary: #666;
+  --color-delete: red;
+  --color-delete-bg: #fff0f0;
+  --color-border: #50C878;
+  
+  /* Typography */
+  --font-size-column-title: 38px;
+  --font-size-task-title: 32px;
+  --font-size-task-description: 22px;
+  --line-height-title: 1.1;
+  --line-height-description: 1.4;
+  --font-size-header: 42px;
+  
+  /* Shadows */
+  --shadow-color: color-mix(in srgb, var(--color-border) 60%, transparent 40%);
+  --shadow-task: 0 0 25px var(--shadow-color);
+  
+  /* Animation */
+  --animation-duration: 0.15s;
+  --task-remove-duration: 0.25s;
+  --button-hover-duration: 0.15s;
+  --status-switch-duration: 0.15s;
+
+  /* Borders */
+  --border-width: 2.5px;
+
+  /* Move Button */
+  --move-button-margin: 8px;
+  --move-button-border-radius: calc(var(--border-radius-card) - var(--move-button-margin));
+  --move-button-size: calc(var(--move-button-border-radius) * 2);
+  --move-button-color: var(--color-text-secondary);
+  --move-button-hover-color: var(--color-text-primary);
+  --move-button-background: white;
+  --move-button-hover-background: #f0f0f0;
+
+  /* Task Marker */
+  --task-marker-width: calc(var(--border-width)*3);
+  --task-marker-border-radius: calc(var(--task-marker-width));
+
+  /* Difficulty Bars */
+  --difficulty-bar-height: 6px;
+  --difficulty-bar-gap: 4px;
+  --color-difficulty-empty: #f0f0f0;
+
+  /* Difficulty Colors */
+  --color-difficulty-easy: var(--color-border);
+  --color-difficulty-medium: #ffce1b;
+  --color-difficulty-hard: var(--color-delete);
+
+  /* Difficulty Indicators */
+  --difficulty-empty-opacity: 0.2;
+
+  /* Task Action Buttons */
+  --task-button-height: 45px;
+  --task-button-gap: var(--difficulty-bar-gap);
+  --task-icon-button-size: 36px;
+  --main-button-icon-gap: 0px;
+  --header-button-icon-gap: 16px;
+  --main-button-padding: 0 16px;
+}

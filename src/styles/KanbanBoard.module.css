@@ -1,0 +1,10 @@
+.boardContainer {
+  display: flex;
+  justify-content: center;
+  /* justify-content: center; */
+  /* align-items: center; */
+  gap: var(--column-gap);
+  /* padding: var(--board-padding); */
+  /* width: 100%; */
+  margin: 0 auto;
+}
