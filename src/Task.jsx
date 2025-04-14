@@ -288,189 +288,192 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
   const progress = getProgress();
 
   return (
-    <div className={className}>
-      <div className={styles.taskContent}>
-        <div className={styles.taskLeftMarker} ref={markerRef} />
-        <div className={`${styles.taskTextContent} ${editingField ? styles.editing : ''}`}>
-          <h3 
-            ref={titleRef}
-            className={styles.taskTitle} 
-            contentEditable
-            suppressContentEditableWarning
-            onFocus={() => setEditingField('title')}
-            onBlur={(e) => handleContentBlur(e, 'title')}
-            onKeyDown={(e) => handleContentKeyDown(e, 'title')}
-          >
-            {task.title}
-          </h3>
-          <p 
-            className={styles.taskDescription} 
-            contentEditable
-            suppressContentEditableWarning
-            onFocus={() => setEditingField('description')}
-            onBlur={(e) => handleContentBlur(e, 'description')}
-            onKeyDown={(e) => handleContentKeyDown(e, 'description')}
-          >
-            {task.description}
-          </p>
-          <div className={styles.difficultyContainer}>
-            <div className={styles.timingInfo}>
-              <span 
-                className={styles.timeEstimate}
-                contentEditable
-                suppressContentEditableWarning
-                onClick={handleTimeEstimateClick}
-                onInput={handleTimeEstimateInput}
-                onFocus={() => setEditingField('timeEstimate')}
-                onBlur={(e) => {
-                  handleTimeEstimateBlur(e);
-                  setEditingField(null);
-                }}
-                onKeyDown={(e) => handleContentKeyDown(e, 'timeEstimate')}
-              >
-                {formatTimeEstimate(task.timeEstimate)}
-              </span>
-              <div className={styles.datePickerWrapper}>
-                <span 
-                  className={styles.deadline}
-                  onClick={() => setIsDatePickerOpen(true)}
-                >
-                  {task.deadline ? formatDeadline(task.deadline) : 'Выберите дату'}
-                </span>
-                <Calendar
-                  isOpen={isDatePickerOpen}
-                  onClose={() => setIsDatePickerOpen(false)}
-                  onSelect={handleDeadlineChange}
-                  initialDate={task.deadline ? new Date(2025, task.deadline.month - 1, task.deadline.day) : new Date()}
-                />
-              </div>
-            </div>
-            <div className={styles.difficultyBarsContainer}>
-              <span className={getDifficultyClass(0)}></span>
-              <span className={getDifficultyClass(1)}></span>
-              <span className={getDifficultyClass(2)}></span>
-            </div>
-          </div>
-          <div className={`${styles.taskActions}`}>
-            {columnPosition === 'start' ? (
-              <div className={styles.taskButtonsRow}>
-                <button 
-                  className={styles.iconButton}
-                  style={{ backgroundColor: 'var(--color-delete-bg)', color: 'var(--color-delete)' }}
-                  title={texts.task.buttons.delete}
-                  onClick={handleDelete}
-                >
-                  <FaTrash />
-                </button>
-                <button 
-                  className={styles.iconButton}
-                  style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
-                  title={texts.task.buttons.edit}
-                >
-                  <FaPenToSquare />
-                </button>
-                <button 
-                  className={styles.iconButton}
-                  style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
-                  onClick={handleCompleteTask}
-                >
-                  <FaCheck />
-                </button>
-                <button 
-                  className={styles.mainButton} 
-                  style={{ 
-                    gap: 'var(--main-button-icon-gap)',
-                    padding: 'var(--main-button-padding)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}
-                  onClick={() => handleMoveButtonClick('right')}
-                >
-                  <span>{texts.task.buttons.details[columnPosition]}</span>
-                  <FaArrowRightLong />
-                </button>
-              </div>
-            ) : columnPosition === 'end' ? (
-              <div className={styles.taskButtonsRow}>
-                <button 
-                  className={styles.iconButton}
-                  style={{ backgroundColor: 'var(--color-delete-bg)', color: 'var(--color-delete)' }}
-                  title={texts.task.buttons.delete}
-                  onClick={handleDelete}
-                >
-                  <FaTrash />
-                </button>
-                <button 
-                  className={styles.iconButton}
-                  style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
-                  title={texts.task.buttons.edit}
-                >
-                  <FaPenToSquare />
-                </button>
-                <button 
-                  className={`${styles.mainButton} ${styles.rightToLeft}`}
-                  style={{ 
-                    gap: 'var(--main-button-icon-gap)',
-                    padding: 'var(--main-button-padding)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'row-reverse',
-                    justifyContent: 'space-between'
-                  }}
-                  onClick={() => handleMoveButtonClick('left')}
-                >
-                  <span>{texts.task.buttons.details[columnPosition]}</span>
-                  <FaArrowLeftLong />
-                </button>
-              </div>
-            ) : columnPosition === 'middle' ? (
-              <div className={styles.taskButtonsRow}>
-                <button 
-                  className={styles.iconButton}
-                  style={{ backgroundColor: 'var(--color-delete-bg)', color: 'var(--color-delete)' }}
-                  title={texts.task.buttons.delete}
-                  onClick={handleDelete}
-                >
-                  <FaTrash />
-                </button>
-                <button 
-                  className={styles.iconButton}
-                  style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
-                  title={texts.task.buttons.edit}
-                >
-                  <FaPenToSquare />
-                </button>
-                <button 
-                  className={styles.iconButton}
-                  style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
-                  onClick={() => handleMoveButtonClick('left')}
-                >
-                  <FaArrowLeftLong />
-                </button>
-                <button 
-                  className={styles.mainButton}
-                  style={{ 
-                    gap: 'var(--main-button-icon-gap)',
-                    padding: 'var(--main-button-padding)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}
-                  onClick={() => handleMoveButtonClick('right')}
-                >
-                  <span>{texts.task.buttons.details[columnPosition]}</span>
-                  <FaArrowRightLong />
-                </button>
-              </div>
-            ) : null}
-          </div>
-          <div className={styles.taskStatusContainer}>
-            <div 
-              className={styles.taskStatus}
-              style={{ '--progress': `${progress}%` }}
+    <div className={styles.taskWrapper}>
+      <div className={styles.taskShadow} />
+      <div className={`${className} ${styles.taskContainer}`}>
+        <div className={styles.taskContent}>
+          <div className={styles.taskLeftMarker} ref={markerRef} />
+          <div className={`${styles.taskTextContent} ${editingField ? styles.editing : ''}`}>
+            <h3 
+              ref={titleRef}
+              className={styles.taskTitle} 
+              contentEditable
+              suppressContentEditableWarning
+              onFocus={() => setEditingField('title')}
+              onBlur={(e) => handleContentBlur(e, 'title')}
+              onKeyDown={(e) => handleContentKeyDown(e, 'title')}
             >
-              {`Осталось ${daysRemaining} ${getDaysWord(daysRemaining)}`}
+              {task.title}
+            </h3>
+            <p 
+              className={styles.taskDescription} 
+              contentEditable
+              suppressContentEditableWarning
+              onFocus={() => setEditingField('description')}
+              onBlur={(e) => handleContentBlur(e, 'description')}
+              onKeyDown={(e) => handleContentKeyDown(e, 'description')}
+            >
+              {task.description}
+            </p>
+            <div className={styles.difficultyContainer}>
+              <div className={styles.timingInfo}>
+                <span 
+                  className={styles.timeEstimate}
+                  contentEditable
+                  suppressContentEditableWarning
+                  onClick={handleTimeEstimateClick}
+                  onInput={handleTimeEstimateInput}
+                  onFocus={() => setEditingField('timeEstimate')}
+                  onBlur={(e) => {
+                    handleTimeEstimateBlur(e);
+                    setEditingField(null);
+                  }}
+                  onKeyDown={(e) => handleContentKeyDown(e, 'timeEstimate')}
+                >
+                  {formatTimeEstimate(task.timeEstimate)}
+                </span>
+                <div className={styles.datePickerWrapper}>
+                  <span 
+                    className={styles.deadline}
+                    onClick={() => setIsDatePickerOpen(true)}
+                  >
+                    {task.deadline ? formatDeadline(task.deadline) : 'Выберите дату'}
+                  </span>
+                  <Calendar
+                    isOpen={isDatePickerOpen}
+                    onClose={() => setIsDatePickerOpen(false)}
+                    onSelect={handleDeadlineChange}
+                    initialDate={task.deadline ? new Date(2025, task.deadline.month - 1, task.deadline.day) : new Date()}
+                  />
+                </div>
+              </div>
+              <div className={styles.difficultyBarsContainer}>
+                <span className={getDifficultyClass(0)}></span>
+                <span className={getDifficultyClass(1)}></span>
+                <span className={getDifficultyClass(2)}></span>
+              </div>
+            </div>
+            <div className={`${styles.taskActions}`}>
+              {columnPosition === 'start' ? (
+                <div className={styles.taskButtonsRow}>
+                  <button 
+                    className={styles.iconButton}
+                    style={{ backgroundColor: 'var(--color-delete-bg)', color: 'var(--color-delete)' }}
+                    title={texts.task.buttons.delete}
+                    onClick={handleDelete}
+                  >
+                    <FaTrash />
+                  </button>
+                  <button 
+                    className={styles.iconButton}
+                    style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
+                    title={texts.task.buttons.edit}
+                  >
+                    <FaPenToSquare />
+                  </button>
+                  <button 
+                    className={styles.iconButton}
+                    style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
+                    onClick={handleCompleteTask}
+                  >
+                    <FaCheck />
+                  </button>
+                  <button 
+                    className={styles.mainButton} 
+                    style={{ 
+                      gap: 'var(--main-button-icon-gap)',
+                      padding: 'var(--main-button-padding)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}
+                    onClick={() => handleMoveButtonClick('right')}
+                  >
+                    <span>{texts.task.buttons.details[columnPosition]}</span>
+                    <FaArrowRightLong />
+                  </button>
+                </div>
+              ) : columnPosition === 'end' ? (
+                <div className={styles.taskButtonsRow}>
+                  <button 
+                    className={styles.iconButton}
+                    style={{ backgroundColor: 'var(--color-delete-bg)', color: 'var(--color-delete)' }}
+                    title={texts.task.buttons.delete}
+                    onClick={handleDelete}
+                  >
+                    <FaTrash />
+                  </button>
+                  <button 
+                    className={styles.iconButton}
+                    style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
+                    title={texts.task.buttons.edit}
+                  >
+                    <FaPenToSquare />
+                  </button>
+                  <button 
+                    className={`${styles.mainButton} ${styles.rightToLeft}`}
+                    style={{ 
+                      gap: 'var(--main-button-icon-gap)',
+                      padding: 'var(--main-button-padding)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexDirection: 'row-reverse',
+                      justifyContent: 'space-between'
+                    }}
+                    onClick={() => handleMoveButtonClick('left')}
+                  >
+                    <span>{texts.task.buttons.details[columnPosition]}</span>
+                    <FaArrowLeftLong />
+                  </button>
+                </div>
+              ) : columnPosition === 'middle' ? (
+                <div className={styles.taskButtonsRow}>
+                  <button 
+                    className={styles.iconButton}
+                    style={{ backgroundColor: 'var(--color-delete-bg)', color: 'var(--color-delete)' }}
+                    title={texts.task.buttons.delete}
+                    onClick={handleDelete}
+                  >
+                    <FaTrash />
+                  </button>
+                  <button 
+                    className={styles.iconButton}
+                    style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
+                    title={texts.task.buttons.edit}
+                  >
+                    <FaPenToSquare />
+                  </button>
+                  <button 
+                    className={styles.iconButton}
+                    style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
+                    onClick={() => handleMoveButtonClick('left')}
+                  >
+                    <FaArrowLeftLong />
+                  </button>
+                  <button 
+                    className={styles.mainButton}
+                    style={{ 
+                      gap: 'var(--main-button-icon-gap)',
+                      padding: 'var(--main-button-padding)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}
+                    onClick={() => handleMoveButtonClick('right')}
+                  >
+                    <span>{texts.task.buttons.details[columnPosition]}</span>
+                    <FaArrowRightLong />
+                  </button>
+                </div>
+              ) : null}
+            </div>
+            <div className={styles.taskStatusContainer}>
+              <div 
+                className={styles.taskStatus}
+                style={{ '--progress': `${progress}%` }}
+              >
+                {`Осталось ${daysRemaining} ${getDaysWord(daysRemaining)}`}
+              </div>
             </div>
           </div>
         </div>

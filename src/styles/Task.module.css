@@ -1,19 +1,48 @@
-.taskCard {
-  padding: calc(var(--task-padding) - var(--border-width));
+/* Новые классы для разделения тени и содержимого задачи */
+.taskWrapper {
+  position: relative;
   margin: var(--task-margin) 0;
-  background: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
+}
+
+.taskShadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
   border-radius: var(--border-radius-card);
   --shadow-color: color-mix(in srgb, var(--color-border) 60%, transparent 40%);
   box-shadow: 0 0 25px var(--shadow-color);
+  transition: box-shadow 0.2s ease;
+}
+
+.taskWrapper:hover .taskShadow {
+  box-shadow: 0 0 calc(25px * var(--task-shadow-scale)) var(--shadow-color);
+}
+
+.taskContainer {
+  position: relative;
+  z-index: 1;
+}
+
+.taskCard {
+  padding: calc(var(--task-padding) - var(--border-width));
+  margin: 0; /* Убираем margin так как он теперь у wrapper */
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius-card);
   cursor: grab;
   position: relative;
-  transition: opacity var(--animation-duration) var(--animation-timing), transform var(--animation-duration) var(--animation-timing);
+  z-index: 1;
+  transition: opacity var(--animation-duration) var(--animation-timing), 
+              transform var(--animation-duration) var(--animation-timing);
   text-align: left;
   width: 100%;
   box-sizing: border-box;
 }
 
+/* Удаляем старый hover эффект */
 .dragging {
   opacity: 0;
   cursor: grabbing;

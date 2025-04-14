@@ -30,6 +30,7 @@
   /* Shadows */
   --shadow-color: color-mix(in srgb, var(--color-border) 60%, transparent 40%);
   --shadow-task: 0 0 25px var(--shadow-color);
+  --task-shadow-scale: 3; /* коэффициент увеличения тени при наведении */
   
   /* Animation */
   --animation-duration: 0.15s;
@@ -73,4 +74,22 @@
   --main-button-icon-gap: 0px;
   --header-button-icon-gap: 16px;
   --main-button-padding: 0 16px;
+
+  /* Calendar Variables */
+  --calendar-day-size: 36px;
+  --calendar-grid-gap: 0rem;
+  --calendar-padding: calc(var(--task-padding) / 3);
+  --calendar-border-radius: calc(var(--calendar-button-size) - var(--calendar-padding));
+  --calendar-header-margin: 0.5rem;
+  --calendar-header-padding: 0.5rem;
+  --calendar-button-size: 32px;
+  --calendar-button-padding: 0.5rem;
+  --calendar-weekdays-gap: 0.01rem;
+  --calendar-weekdays-margin: 0.01rem;
+  --calendar-day-font-size: 18px;
+  --calendar-weekday-font-size: var(--font-size-task-description);
+  --calendar-header-font-size: var(--font-size-task-description);
+  --calendar-button-font-size: 1.2rem;
+  /* Calculate total width based on 7 days, gaps, and padding */
+  --calendar-width: calc(7 * var(--calendar-day-size) + 6 * var(--calendar-grid-gap) + 2 * var(--calendar-padding));
 }
