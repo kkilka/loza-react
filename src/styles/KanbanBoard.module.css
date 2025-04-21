@@ -1,10 +1,23 @@
 .boardContainer {
   display: flex;
   justify-content: center;
-  /* justify-content: center; */
-  /* align-items: center; */
   gap: var(--column-gap);
-  /* padding: var(--board-padding); */
-  /* width: 100%; */
   margin: 0 auto;
+  position: relative;
+  width: 100%;
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .boardContainer {
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .boardInner {
+    display: flex;
+    width: calc(100% + var(--column-gap));
+    margin: 0 var(--board-padding);
+    transition: transform 0.3s ease-out;
+    column-gap: var(--column-gap);
+  }
 }

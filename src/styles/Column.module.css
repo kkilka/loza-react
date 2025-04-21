@@ -13,37 +13,43 @@
 .headerOverlay {
   position: absolute;
   top: calc(-100vh);
-  height: 100vh;  /* Высота от -100vh до 0 */
-  bottom: 0;      /* Привязка к верхней границе градиента */
+  height: 100vh;
+  /* Высота от -100vh до 0 */
+  bottom: 0;
+  /* Привязка к верхней границе градиента */
   left: -3rem;
   right: -3rem;
   background: #f4f5f7;
-  z-index: 3;     /* Выше градиента */
+  z-index: 3;
+  /* Выше градиента */
   pointer-events: none;
 }
 
 .headerGradient {
   position: absolute;
-  left: -2rem; /* увеличен */
-  right: -2rem; /* увеличен */
+  left: -2rem;
+  /* увеличен */
+  right: -2rem;
+  /* увеличен */
   top: 0;
   height: 120px;
-  background: linear-gradient(to bottom, 
-    #f4f5f7 0%,
-    #f4f5f7 40px,
-    rgba(244,245,247,0.95) 50px,
-    rgba(244,245,247,0.8) 60px,
-    rgba(244,245,247,0.6) 70px,
-    rgba(244,245,247,0.2) 80px,
-    transparent 90px
-  );
+  background: linear-gradient(to bottom,
+      #f4f5f7 0%,
+      #f4f5f7 40px,
+      rgba(244, 245, 247, 0.95) 50px,
+      rgba(244, 245, 247, 0.8) 60px,
+      rgba(244, 245, 247, 0.6) 70px,
+      rgba(244, 245, 247, 0.2) 80px,
+      transparent 90px);
   z-index: 2;
   pointer-events: none;
 }
 
 .headerContainer {
   position: relative;
-  z-index: 1000;  /* Увеличиваем z-index, чтобы заголовок был над градиентом */
+  margin-top: 8px;
+  z-index: 1000;
+  /* Увеличиваем z-index, чтобы заголовок был над градиентом */
 }
 
 .columnTitle {
@@ -94,9 +100,9 @@
 }
 
 /* Новое правило для плавного перехода при изменении позиций */
-.taskList > * {
+.taskList>* {
   transition: transform 0.15s cubic-bezier(0.25, 0.1, 0.25, 1),
-              opacity 0.15s ease-in-out;
+    opacity 0.15s ease-in-out;
 }
 
 .deleteZone {
@@ -133,6 +139,28 @@
 }
 
 @keyframes fadeInMessage {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .columnContainer {
+    min-width: calc(100% - var(--column-gap));
+    width: calc(100% - var(--column-gap));
+    margin: 0;
+    flex-shrink: 0;
+    transition: opacity 0.3s ease-out;
+  }
+
+  .columnContainer.inactive {
+    opacity: 0;
+    pointer-events: none;
+  }
 }

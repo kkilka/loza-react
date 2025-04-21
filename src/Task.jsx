@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import styles from './styles/Task.module.css'
 import { FaTrash, FaPen, FaArrowRightLong, FaArrowLeftLong, FaCheck, FaPenToSquare } from "react-icons/fa6"
 import texts from './locales/ru.json'
@@ -7,6 +8,7 @@ import Calendar from './components/Calendar';
 function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
   const [isDeleting, setIsDeleting] = useState(false)
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
+  const [dateClickRef, setDateClickRef] = useState(null);
   const titleRef = useRef(null)
   const markerRef = useRef(null)
   const [isAppearing, setIsAppearing] = useState(true)
@@ -53,7 +55,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
   const handleMoveButtonClick = (direction) => {
     const removeDuration = parseFloat(getComputedStyle(document.documentElement)
       .getPropertyValue('--task-remove-duration')) * 1000 || 400;
-    
+
     const newTask = {
       ...task,
       id: `task-${Date.now()}`,
@@ -62,10 +64,10 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
       difficulty: task.difficulty,
       timeEstimate: task.timeEstimate
     };
-    
+
     onMoveToNext(newTask, columnPosition, direction);
     setIsDeleting(true);
-    
+
     setTimeout(() => {
       onUpdate(task.id, { deleted: true });
     }, removeDuration);
@@ -74,7 +76,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
   const handleCompleteTask = () => {
     const removeDuration = parseFloat(getComputedStyle(document.documentElement)
       .getPropertyValue('--task-remove-duration')) * 1000 || 400;
-    
+
     const newTask = {
       ...task,
       id: `task-${Date.now()}`,
@@ -83,10 +85,10 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
       difficulty: task.difficulty,
       timeEstimate: task.timeEstimate
     };
-    
+
     onMoveToNext(newTask, columnPosition, 'complete');
     setIsDeleting(true);
-    
+
     setTimeout(() => {
       onUpdate(task.id, { deleted: true });
     }, removeDuration);
@@ -109,7 +111,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
       const selection = window.getSelection();
       const startPos = textContent.indexOf(numberMatch[0]);
       const endPos = startPos + numberMatch[0].length;
-      
+
       range.setStart(text.firstChild, startPos);
       range.setEnd(text.firstChild, endPos);
       selection.removeAllRanges();
@@ -123,7 +125,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
       const hours = parseInt(numberMatch[0], 10);
       const lastDigit = hours % 10;
       const lastTwoDigits = hours % 100;
-      
+
       let suffix;
       if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
         suffix = 'часов';
@@ -161,10 +163,10 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
   const handleContentKeyDown = (e, field) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      
+
       const fieldOrder = ['title', 'description', 'timeEstimate'];
       const currentIndex = fieldOrder.indexOf(field);
-      
+
       if (currentIndex === fieldOrder.length - 1) {
         e.target.blur();
         setEditingField(null);
@@ -175,7 +177,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
           description: document.querySelector(`.${styles.taskDescription}`),
           timeEstimate: document.querySelector(`.${styles.timeEstimate}`)
         };
-        
+
         if (nextField === 'timeEstimate') {
           // Select number in timeEstimate field
           const timeElement = elements[nextField];
@@ -187,7 +189,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
             const selection = window.getSelection();
             const startPos = textContent.indexOf(numberMatch[0]);
             const endPos = startPos + numberMatch[0].length;
-            
+
             range.setStart(timeElement.firstChild, startPos);
             range.setEnd(timeElement.firstChild, endPos);
             selection.removeAllRanges();
@@ -205,6 +207,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
       onUpdate(task.id, { deadline: date });
     }
     setIsDatePickerOpen(false);
+    setDateClickRef(null);
   };
 
   if (task.deleted) return null;
@@ -245,7 +248,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
   const formatTimeEstimate = (hours) => {
     const lastDigit = hours % 10;
     const lastTwoDigits = hours % 100;
-    
+
     let suffix;
     if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
       suffix = 'часов';
@@ -256,7 +259,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
     } else {
       suffix = 'часов';
     }
-    
+
     return `~${hours} ${suffix}`;
   };
 
@@ -276,10 +279,10 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
     const now = new Date();
     const created = new Date(task.createdAt);
     const deadline = new Date(2025, task.deadline.month - 1, task.deadline.day);
-    
+
     const totalDuration = deadline - created;
     const elapsedTime = now - created;
-    
+
     const progress = Math.min(Math.max((elapsedTime / totalDuration) * 100, 0), 100);
     return progress;
   };
@@ -294,9 +297,9 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
         <div className={styles.taskContent}>
           <div className={styles.taskLeftMarker} ref={markerRef} />
           <div className={`${styles.taskTextContent} ${editingField ? styles.editing : ''}`}>
-            <h3 
+            <h3
               ref={titleRef}
-              className={styles.taskTitle} 
+              className={styles.taskTitle}
               contentEditable
               suppressContentEditableWarning
               onFocus={() => setEditingField('title')}
@@ -305,8 +308,8 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
             >
               {task.title}
             </h3>
-            <p 
-              className={styles.taskDescription} 
+            <p
+              className={styles.taskDescription}
               contentEditable
               suppressContentEditableWarning
               onFocus={() => setEditingField('description')}
@@ -317,7 +320,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
             </p>
             <div className={styles.difficultyContainer}>
               <div className={styles.timingInfo}>
-                <span 
+                <span
                   className={styles.timeEstimate}
                   contentEditable
                   suppressContentEditableWarning
@@ -333,18 +336,28 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
                   {formatTimeEstimate(task.timeEstimate)}
                 </span>
                 <div className={styles.datePickerWrapper}>
-                  <span 
+                  <span
                     className={styles.deadline}
-                    onClick={() => setIsDatePickerOpen(true)}
+                    onClick={(e) => {
+                      setDateClickRef(e.currentTarget);
+                      setIsDatePickerOpen(true);
+                    }}
                   >
                     {task.deadline ? formatDeadline(task.deadline) : 'Выберите дату'}
                   </span>
-                  <Calendar
-                    isOpen={isDatePickerOpen}
-                    onClose={() => setIsDatePickerOpen(false)}
-                    onSelect={handleDeadlineChange}
-                    initialDate={task.deadline ? new Date(2025, task.deadline.month - 1, task.deadline.day) : new Date()}
-                  />
+                  {isDatePickerOpen && createPortal(
+                    <Calendar
+                      isOpen={isDatePickerOpen}
+                      onClose={() => {
+                        setIsDatePickerOpen(false);
+                        setDateClickRef(null);
+                      }}
+                      onSelect={handleDeadlineChange}
+                      targetElement={dateClickRef}
+                      initialDate={task.deadline ? new Date(2025, task.deadline.month - 1, task.deadline.day) : new Date()}
+                    />,
+                    document.body
+                  )}
                 </div>
               </div>
               <div className={styles.difficultyBarsContainer}>
@@ -356,7 +369,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
             <div className={`${styles.taskActions}`}>
               {columnPosition === 'start' ? (
                 <div className={styles.taskButtonsRow}>
-                  <button 
+                  <button
                     className={styles.iconButton}
                     style={{ backgroundColor: 'var(--color-delete-bg)', color: 'var(--color-delete)' }}
                     title={texts.task.buttons.delete}
@@ -364,23 +377,23 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
                   >
                     <FaTrash />
                   </button>
-                  <button 
+                  <button
                     className={styles.iconButton}
                     style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
                     title={texts.task.buttons.edit}
                   >
                     <FaPenToSquare />
                   </button>
-                  <button 
+                  <button
                     className={styles.iconButton}
                     style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
                     onClick={handleCompleteTask}
                   >
                     <FaCheck />
                   </button>
-                  <button 
-                    className={styles.mainButton} 
-                    style={{ 
+                  <button
+                    className={styles.mainButton}
+                    style={{
                       gap: 'var(--main-button-icon-gap)',
                       padding: 'var(--main-button-padding)',
                       display: 'flex',
@@ -395,7 +408,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
                 </div>
               ) : columnPosition === 'end' ? (
                 <div className={styles.taskButtonsRow}>
-                  <button 
+                  <button
                     className={styles.iconButton}
                     style={{ backgroundColor: 'var(--color-delete-bg)', color: 'var(--color-delete)' }}
                     title={texts.task.buttons.delete}
@@ -403,16 +416,16 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
                   >
                     <FaTrash />
                   </button>
-                  <button 
+                  <button
                     className={styles.iconButton}
                     style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
                     title={texts.task.buttons.edit}
                   >
                     <FaPenToSquare />
                   </button>
-                  <button 
+                  <button
                     className={`${styles.mainButton} ${styles.rightToLeft}`}
-                    style={{ 
+                    style={{
                       gap: 'var(--main-button-icon-gap)',
                       padding: 'var(--main-button-padding)',
                       display: 'flex',
@@ -428,7 +441,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
                 </div>
               ) : columnPosition === 'middle' ? (
                 <div className={styles.taskButtonsRow}>
-                  <button 
+                  <button
                     className={styles.iconButton}
                     style={{ backgroundColor: 'var(--color-delete-bg)', color: 'var(--color-delete)' }}
                     title={texts.task.buttons.delete}
@@ -436,23 +449,23 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
                   >
                     <FaTrash />
                   </button>
-                  <button 
+                  <button
                     className={styles.iconButton}
                     style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
                     title={texts.task.buttons.edit}
                   >
                     <FaPenToSquare />
                   </button>
-                  <button 
+                  <button
                     className={styles.iconButton}
                     style={{ backgroundColor: '#d4f7d4', color: '#28a745' }}
                     onClick={() => handleMoveButtonClick('left')}
                   >
                     <FaArrowLeftLong />
                   </button>
-                  <button 
+                  <button
                     className={styles.mainButton}
-                    style={{ 
+                    style={{
                       gap: 'var(--main-button-icon-gap)',
                       padding: 'var(--main-button-padding)',
                       display: 'flex',
@@ -468,7 +481,7 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
               ) : null}
             </div>
             <div className={styles.taskStatusContainer}>
-              <div 
+              <div
                 className={styles.taskStatus}
                 style={{ '--progress': `${progress}%` }}
               >

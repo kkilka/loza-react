@@ -28,12 +28,12 @@ function App() {
 
   const handleTouchMove = (e) => {
     if (!boardContainerRef.current.dataset.touchStartX) return;
-    
+
     const touch = e.touches[0];
     const startX = parseFloat(boardContainerRef.current.dataset.touchStartX);
     const currentX = touch.clientX;
     const diff = startX - currentX;
-    
+
     boardContainerRef.current.scrollLeft += diff;
     boardContainerRef.current.dataset.touchStartX = currentX;
   };
@@ -54,17 +54,17 @@ function App() {
           <FaPlus />
         </button>
         <div className={styles.scrollIndicator}>
-          <div 
-            className={styles.scrollProgress} 
+          <div
+            className={styles.scrollProgress}
             style={{
-              width: boardContainerRef.current 
+              width: boardContainerRef.current
                 ? `${(scrollPosition / (boardContainerRef.current.scrollWidth - boardContainerRef.current.clientWidth)) * 100}%`
                 : '0%'
             }}
           />
         </div>
       </header>
-      <div 
+      <div
         ref={boardContainerRef}
         className={styles.appContainer}
         onTouchStart={handleTouchStart}

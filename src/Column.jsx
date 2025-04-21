@@ -14,8 +14,8 @@ function Column({ column, tasks, onMoveToNext, columnPosition, onAddTask, onTask
       </div>
       <div className={styles.taskList}>
         {tasks.map(task => (
-          <Task 
-            key={task.id} 
+          <Task
+            key={task.id}
             task={task}
             onMoveToNext={onMoveToNext}
             columnPosition={columnPosition}
