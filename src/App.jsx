@@ -73,6 +73,9 @@ function App() {
         onScroll={handleScroll}
       >
         <KanbanBoard ref={boardRef} />
+        <div className={styles.footer}>
+          Настоящий веб-сайт разработан в рамках индивидуального проекта<br/>Кречетов Илья, МБОУ СОШ №3, Бийск 2025
+        </div>
       </div>
     </>
   )

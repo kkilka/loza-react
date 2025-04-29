@@ -1,23 +1,42 @@
 .boardContainer {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 0;
+  padding-bottom: 25px; /* Add padding for shadow */
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
   display: flex;
   justify-content: center;
+}
+
+.boardInner {
+  display: flex;
   gap: var(--column-gap);
-  margin: 0 auto;
-  position: relative;
-  width: 100%;
+  width: fit-content;
+  min-width: min-content;
+  padding: 0 var(--board-padding);
+  max-width: calc(var(--column-width) * 3 + var(--column-gap) * 2 + var(--board-padding) * 2);
 }
 
 @media (max-width: 768px) and (orientation: portrait) {
   .boardContainer {
-    overflow: hidden;
-    padding: 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    justify-content: flex-start;
+  }
+
+  .boardContainer::-webkit-scrollbar {
+    display: none;
   }
 
   .boardInner {
     display: flex;
-    width: calc(100% + var(--column-gap));
-    margin: 0 var(--board-padding);
-    transition: transform 0.3s ease-out;
-    column-gap: var(--column-gap);
+    gap: 0;
+    padding: 0;
+    max-width: none;
+    width: auto;
   }
 }

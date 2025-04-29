@@ -77,6 +77,10 @@
   .appContainer::-webkit-scrollbar {
     display: none;
   }
+
+  .header {
+    padding: 0.5rem var(--mobile-screen-padding);
+  }
 }
 
 .scrollIndicator {
@@ -92,4 +96,15 @@
   height: 100%;
   background: #007bff;
   transition: width 0.1s ease-out;
+}
+
+.footer {
+  font-size: var(--font-size-task-description);
+  color: var(--color-text-secondary);
+  padding: var(--task-padding);
+  text-align: center;
+  font-family: 'TinkoffSans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  position: relative;
+  z-index: 1;
+  margin-top: 25px; /* Add margin to avoid overlapping with task shadows */
 }

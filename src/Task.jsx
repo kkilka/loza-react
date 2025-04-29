@@ -163,7 +163,15 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
   const handleContentKeyDown = (e, field) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      
+      // On mobile, just blur the field to apply changes
+      if (window.innerWidth <= 768 && window.matchMedia('(orientation: portrait)').matches) {
+        e.target.blur();
+        setEditingField(null);
+        return;
+      }
 
+      // Desktop behavior remains unchanged
       const fieldOrder = ['title', 'description', 'timeEstimate'];
       const currentIndex = fieldOrder.indexOf(field);
 
@@ -172,14 +180,15 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
         setEditingField(null);
       } else {
         const nextField = fieldOrder[currentIndex + 1];
+        // Найти карточку текущей задачи и искать элементы только внутри нее
+        const taskCard = e.target.closest(`.${styles.taskCard}`);
         const elements = {
-          title: titleRef.current,
-          description: document.querySelector(`.${styles.taskDescription}`),
-          timeEstimate: document.querySelector(`.${styles.timeEstimate}`)
+          title: taskCard?.querySelector(`.${styles.taskTitle}`),
+          description: taskCard?.querySelector(`.${styles.taskDescription}`),
+          timeEstimate: taskCard?.querySelector(`.${styles.timeEstimate}`)
         };
 
         if (nextField === 'timeEstimate') {
-          // Select number in timeEstimate field
           const timeElement = elements[nextField];
           timeElement?.focus();
           const textContent = timeElement.textContent;
@@ -290,6 +299,22 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
   const daysRemaining = getRemainingDays();
   const progress = getProgress();
 
+  const handleFocus = (e) => {
+    if (window.innerWidth <= 768 && window.matchMedia('(orientation: portrait)').matches) {
+      const element = e.target;
+      const elementRect = element.getBoundingClientRect();
+      const elementCenter = elementRect.top + elementRect.height / 2;
+      const viewportHeight = window.innerHeight;
+      const viewportCenter = viewportHeight / 2;
+      const offset = elementCenter - viewportCenter;
+      
+      window.scrollTo({
+        top: window.scrollY + offset,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <div className={styles.taskWrapper}>
       <div className={styles.taskShadow} />
@@ -302,7 +327,11 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
               className={styles.taskTitle}
               contentEditable
               suppressContentEditableWarning
-              onFocus={() => setEditingField('title')}
+              enterKeyHint="done"
+              onFocus={(e) => {
+                setEditingField('title');
+                handleFocus(e);
+              }}
               onBlur={(e) => handleContentBlur(e, 'title')}
               onKeyDown={(e) => handleContentKeyDown(e, 'title')}
             >
@@ -312,7 +341,11 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
               className={styles.taskDescription}
               contentEditable
               suppressContentEditableWarning
-              onFocus={() => setEditingField('description')}
+              enterKeyHint="done"
+              onFocus={(e) => {
+                setEditingField('description');
+                handleFocus(e);
+              }}
               onBlur={(e) => handleContentBlur(e, 'description')}
               onKeyDown={(e) => handleContentKeyDown(e, 'description')}
             >
@@ -324,9 +357,14 @@ function Task({ task, onMoveToNext, columnPosition, onUpdate }) {
                   className={styles.timeEstimate}
                   contentEditable
                   suppressContentEditableWarning
+                  enterKeyHint="done"
+                  inputMode="numeric"
                   onClick={handleTimeEstimateClick}
                   onInput={handleTimeEstimateInput}
-                  onFocus={() => setEditingField('timeEstimate')}
+                  onFocus={(e) => {
+                    setEditingField('timeEstimate');
+                    handleFocus(e);
+                  }}
                   onBlur={(e) => {
                     handleTimeEstimateBlur(e);
                     setEditingField(null);

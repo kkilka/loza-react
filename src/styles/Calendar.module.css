@@ -29,25 +29,17 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0);
-  backdrop-filter: blur(0);
-  -webkit-backdrop-filter: blur(0);
+  background: transparent;
   z-index: 2000;
-  transition: all 0.2s ease-out;
-  pointer-events: none;
-}
-
-.overlay.visible {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   pointer-events: auto;
 }
 
+.overlay.visible {
+  background: transparent;
+}
+
 .overlay.hiding {
-  background: rgba(0, 0, 0, 0);
-  backdrop-filter: blur(0);
-  -webkit-backdrop-filter: blur(0);
+  background: transparent;
 }
 
 .calendarHeader {
@@ -55,13 +47,16 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--calendar-header-margin);
-  /* padding: 0 var(--calendar-header-padding); */
+  padding: 8px;
+  min-height: 36px;
 }
 
 .calendarHeader span {
   font-weight: 600;
   font-size: var(--calendar-header-font-size);
-  color: var(--color-text);
+  color: var(--color-text-primary);
+  flex: 1;
+  text-align: center;
 }
 
 .calendarHeader button {
@@ -164,5 +159,25 @@
   /* Уменьшаем шрифт для мобильных */
   .day {
     font-size: calc(var(--calendar-day-font-size) * 0.9);
+  }
+
+  .overlay {
+    background: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0);
+    -webkit-backdrop-filter: blur(0);
+    pointer-events: none;
+  }
+
+  .overlay.visible {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    pointer-events: auto;
+  }
+
+  .overlay.hiding {
+    background: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0);
+    -webkit-backdrop-filter: blur(0);
   }
 }

@@ -238,9 +238,10 @@
 }
 
 .taskTitle:focus,
-.taskDescription:focus {
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 4px;
+.taskDescription:focus,
+.timeEstimate:focus {
+  outline: none;
+  background: transparent;
 }
 
 .taskTitle[contenteditable],
@@ -555,6 +556,7 @@
   display: flex;
   gap: var(--difficulty-bar-gap);
   width: 100%;
+  margin-bottom: var(--task-title-margin);
 }
 
 .difficultyBar {
@@ -585,6 +587,7 @@
 
 .difficultyContainer {
   margin-top: var(--task-title-margin);
+  margin-bottom: var(--task-title-margin);
 }
 
 .timingInfo {
@@ -718,6 +721,7 @@
   z-index: 2;
   opacity: 0;
   transition: opacity var(--status-switch-duration) ease;
+  margin-top: var(--task-title-margin);
 }
 
 .taskCard:hover .taskActions {
@@ -865,7 +869,7 @@
 
 .taskStatusContainer {
   height: var(--task-button-height);
-  margin-top: calc(var(--task-title-margin) * 1.5);
+  margin-top: var(--task-title-margin);
 }
 
 .taskStatus {
@@ -985,4 +989,93 @@
 
 .deadline:hover {
   color: var(--color-primary);
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .taskWrapper {
+    width: 100%;
+  }
+
+  .taskCard {
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+
+  .taskTextContent {
+    width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .difficultyContainer {
+    margin-top: var(--task-title-margin);
+    margin-bottom: var(--task-title-margin);
+  }
+
+  .taskStatusContainer {
+    margin: 0;
+    order: 1;
+  }
+
+  .taskActions {
+    position: relative;
+    opacity: 1;
+    margin: 0;
+    margin-top: var(--task-button-gap);
+    order: 2;
+  }
+
+  /* Исправляем размер кнопок на мобильных */
+  .iconButton {
+    width: var(--task-button-height);
+    height: var(--task-button-height);
+  }
+
+  .mainButton {
+    height: var(--task-button-height);
+    font-size: var(--font-size-task-description);
+  }
+
+  .taskButtonsRow {
+    width: 100%;
+    flex-wrap: wrap;
+    height: var(--task-button-height) !important;
+    min-height: var(--task-button-height) !important;
+    opacity: 1 !important;
+    margin: 0;
+    align-items: stretch;
+  }
+
+  /* Убираем эффекты наведения на мобильных */
+  .taskCard:hover .taskButtonsRow,
+  .taskButtonsRow,
+  .taskStatus,
+  .taskActions {
+    transition: none;
+  }
+
+  .taskCard:hover .taskStatus {
+    opacity: 1;
+  }
+
+  .taskTitle[contenteditable]:focus,
+  .taskDescription[contenteditable]:focus,
+  .timeEstimate[contenteditable]:focus {
+    outline: none;
+    padding: 8px;
+    margin: -8px;
+    background: transparent;
+    position: relative;
+    z-index: 10;
+  }
+
+  .taskWrapper {
+    position: relative;
+    margin: var(--task-margin) 0;
+    transform: translateZ(0); /* Создаем новый stacking context */
+  }
 }

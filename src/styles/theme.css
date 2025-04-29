@@ -92,4 +92,16 @@
   --calendar-button-font-size: 1.2rem;
   /* Calculate total width based on 7 days, gaps, and padding */
   --calendar-width: calc(7 * var(--calendar-day-size) + 6 * var(--calendar-grid-gap) + 2 * var(--calendar-padding));
+
+  /* Mobile specific variables */
+  --column-mobile-gap: 0.5rem;
+  --mobile-board-padding: 1rem;
+  --mobile-screen-padding: 10px;
+  --mobile-column-transition: 0.2s;
+  --mobile-column-timing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  @media (max-width: 768px) and (orientation: portrait) {
+    --column-gap: var(--column-mobile-gap);
+    --board-padding: var(--mobile-board-padding);
+  }
 }

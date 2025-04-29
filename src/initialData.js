@@ -7,10 +7,10 @@ export const initialData = {
       difficulty: 0.4,
       timeEstimate: 2,
       deadline: {
-        day: 12,
-        month: 4
+        day: 1,
+        month: 5
       },
-      createdAt: "2025-04-02T00:00:00.000Z" // сегодня
+      createdAt: "2025-04-29T00:00:00.000Z"
     },
     'task-2': {
       id: 'task-2',
@@ -19,10 +19,10 @@ export const initialData = {
       difficulty: 0.7,
       timeEstimate: 3,
       deadline: {
-        day: 10,
-        month: 4
+        day: 3,
+        month: 5
       },
-      createdAt: "2025-04-01T00:00:00.000Z"
+      createdAt: "2025-04-28T00:00:00.000Z"
     },
     'task-3': {
       id: 'task-3',
@@ -31,10 +31,10 @@ export const initialData = {
       difficulty: 0.3,
       timeEstimate: 1,
       deadline: {
-        day: 11,
-        month: 4
+        day: 5,
+        month: 5
       },
-      createdAt: "2025-03-31T00:00:00.000Z"
+      createdAt: "2025-04-27T00:00:00.000Z"
     },
     'task-4': {
       id: 'task-4',
@@ -43,10 +43,10 @@ export const initialData = {
       difficulty: 0.8,
       timeEstimate: 4,
       deadline: {
-        day: 9,
-        month: 4
+        day: 7,
+        month: 5
       },
-      createdAt: "2025-03-30T00:00:00.000Z"
+      createdAt: "2025-04-26T00:00:00.000Z"
     },
     'task-5': {
       id: 'task-5',
@@ -55,10 +55,10 @@ export const initialData = {
       difficulty: 0.5,
       timeEstimate: 2,
       deadline: {
-        day: 12,
-        month: 4
+        day: 1,
+        month: 5
       },
-      createdAt: "2025-03-29T00:00:00.000Z"
+      createdAt: "2025-04-25T00:00:00.000Z"
     },
     'task-6': {
       id: 'task-6',
@@ -67,10 +67,10 @@ export const initialData = {
       difficulty: 0.6,
       timeEstimate: 3,
       deadline: {
-        day: 10,
-        month: 4
+        day: 3,
+        month: 5
       },
-      createdAt: "2025-03-28T00:00:00.000Z"
+      createdAt: "2025-04-24T00:00:00.000Z"
     },
     'task-7': {
       id: 'task-7',
@@ -79,10 +79,10 @@ export const initialData = {
       difficulty: 0.2,
       timeEstimate: 1,
       deadline: {
-        day: 11,
-        month: 4
+        day: 5,
+        month: 5
       },
-      createdAt: "2025-03-27T00:00:00.000Z"
+      createdAt: "2025-04-23T00:00:00.000Z"
     },
     'task-8': {
       id: 'task-8',
@@ -91,10 +91,10 @@ export const initialData = {
       difficulty: 0.4,
       timeEstimate: 2,
       deadline: {
-        day: 12,
-        month: 4
+        day: 1,
+        month: 5
       },
-      createdAt: "2025-03-26T00:00:00.000Z"
+      createdAt: "2025-04-22T00:00:00.000Z"
     },
     'task-9': {
       id: 'task-9',
@@ -103,10 +103,10 @@ export const initialData = {
       difficulty: 0.5,
       timeEstimate: 2,
       deadline: {
-        day: 12,
-        month: 4
+        day: 1,
+        month: 5
       },
-      createdAt: "2025-03-25T00:00:00.000Z"
+      createdAt: "2025-04-21T00:00:00.000Z"
     },
     'task-10': {
       id: 'task-10',
@@ -115,10 +115,10 @@ export const initialData = {
       difficulty: 0.7,
       timeEstimate: 3,
       deadline: {
-        day: 10,
-        month: 4
+        day: 3,
+        month: 5
       },
-      createdAt: "2025-03-24T00:00:00.000Z"
+      createdAt: "2025-04-20T00:00:00.000Z"
     }
   },
   columns: {

@@ -152,15 +152,15 @@
 
 @media (max-width: 768px) and (orientation: portrait) {
   .columnContainer {
-    min-width: calc(100% - var(--column-gap));
-    width: calc(100% - var(--column-gap));
+    min-width: 100vw;
+    width: 100vw;
     margin: 0;
     flex-shrink: 0;
-    transition: opacity 0.3s ease-out;
-  }
-
-  .columnContainer.inactive {
-    opacity: 0;
-    pointer-events: none;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    padding-left: var(--mobile-screen-padding);
+    padding-right: var(--mobile-screen-padding);
+    box-sizing: border-box;
+    transition: transform var(--mobile-column-transition) var(--mobile-column-timing);
   }
 }
